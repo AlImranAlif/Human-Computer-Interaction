@@ -36,7 +36,7 @@ It allows users to vote securely using RFID cards and provides **real-time feedb
 ---
 
 ## 🖼️ System Preview
-
+![dashboard]_("C:\Users\Alif\Downloads\WhatsApp Image 2026-05-21 at 4.49.31 AM.jpeg")
 
 
 ### 🔹 OLED Interface
