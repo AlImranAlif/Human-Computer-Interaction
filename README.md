@@ -1,7 +1,8 @@
 # 📡 RFID-Based Electronic Voting Machine (HCI Project)
 
-A Human-Computer Interaction (HCI) based electronic voting system built using **Arduino Uno**, **RC522 RFID module**, and **SSD1306 OLED display**.  
-The system demonstrates how **usability, feedback, and error prevention** can be implemented in a low-cost embedded system.
+A Human-Computer Interaction (HCI) based electronic voting system built using **Arduino Uno**, **RC522 RFID module**, and **SSD1306 OLED display**.
+
+This project demonstrates **usability, feedback design, error prevention, and real-time interaction** using low-cost embedded hardware.
 
 ---
 
@@ -19,38 +20,37 @@ The system demonstrates how **usability, feedback, and error prevention** can be
 
 ## 📌 Project Overview
 
-This project is a **low-cost RFID-based voting machine** designed for HCI evaluation.  
-It allows users to vote securely using RFID cards and provides **real-time feedback via OLED display, LED, and buzzer**.
+This system allows users to vote using RFID cards with a simple interactive interface.
 
-### 🔑 Key Features
-
-- RFID-based voter identification  
+### 🔑 Key Features:
+- RFID-based voter authentication  
 - One-button candidate selection  
-- Hold-to-confirm voting mechanism  
-- OLED real-time interface  
-- Live vote counting  
-- Double-vote prevention system  
-- Multimodal feedback (visual + audio)  
-- State machine-based system design  
+- Hold-to-confirm voting system  
+- OLED real-time display  
+- LED + buzzer feedback  
+- Double voting prevention  
+- State-machine-based system design  
 
 ---
 
-## 🖼️ System Preview
-![dashboard]_("C:\Users\Alif\Downloads\WhatsApp Image 2026-05-21 at 4.49.31 AM.jpeg")
+## 🖼️ System Interface
 
+### 🔹 Main Dashboard (OLED Interface)
+![Main Dashboard](image/WhatsApp Image 2026-05-21 at 4.49.31 AM.jpeg)
 
-### 🔹 OLED Interface
-![OLED Interface](images/oled_interface.jpg)
+---
 
-### 🔹 Candidate Selection Screen
-![Selection Screen](images/selection_screen.jpg)
+### 🔹 Google Sheet Add & Main Screen Dashboard (Candidate Selection)
+![Google Sheet & Main Screen](image/WhatsApp Image 2026-05-21 at 4.49.32 AM.jpeg)
+
+---
 
 ### 🔹 Hardware Wiring
-![Wiring Diagram](images/wiring_diagram.jpg)
+![Hardware Wiring](image/WhatsApp Image 2026-05-21 at 5.14.20 AM.jpeg)
 
 ---
 
-##  Hardware Components
+## ⚙️ Hardware Components
 
 - Arduino Uno R3  
 - RC522 RFID Module (13.56 MHz)  
@@ -62,58 +62,57 @@ It allows users to vote securely using RFID cards and provides **real-time feedb
 
 ---
 
-##  HCI Principles Implemented
+## 🧠 HCI Principles Used
 
 ✔ Visibility of system status  
-✔ Error prevention (hold-to-confirm voting)  
+✔ Error prevention (hold-to-confirm)  
 ✔ User control & freedom (timeout system)  
-✔ Recognition over recall (displayed options)  
-✔ Minimal cognitive load UI design  
-✔ Multimodal feedback (OLED + buzzer + LED)  
+✔ Recognition over recall  
+✔ Minimal cognitive load UI  
+✔ Multimodal feedback (OLED + LED + buzzer)  
 
 ---
 
-##  System Architecture
-
-The system is designed using a **Finite State Machine (FSM)**:
+## 🏗️ System Flow
+IDLE → RFID SCAN → SELECTION → CONFIRM → RESULT → IDLE
 
 - Non-blocking logic using `millis()`
-- Button works in multiple modes (short press & long press)
-- UID-based voter tracking stored in SRAM
+- Button supports short press & long press actions
+- UID-based anti-double voting system
 
 ---
 
-##  How It Works
+## 🚀 How It Works
 
 1. User scans RFID card  
-2. System checks if voter already voted  
+2. System checks voter validity  
 3. Candidate selection screen appears  
-4. Button is used to cycle candidates  
-5. Long press confirms vote  
-6. Vote is stored and feedback is shown  
-7. System returns to IDLE mode  
+4. Button cycles through candidates  
+5. Hold button to confirm vote  
+6. Vote stored and result displayed  
+7. System returns to idle state  
 
 ---
 
-##  Anti-Vote Fraud System
+## 🔐 Security Feature
 
 - Each RFID card has a unique UID  
-- Duplicate voting is blocked immediately  
-- UID stored after successful vote  
-- Confirmation requires long press (2 seconds)  
+- Prevents duplicate voting  
+- Vote confirmation requires long press  
+- System rejects repeated votes instantly  
 
 ---
 
-##  Performance
+## 📊 Performance
 
-- RFID scan time: < 100 ms  
+- RFID response time: < 100 ms  
 - Button response: ~1 ms  
-- Voting duration: ~5–8 seconds  
+- Voting time: ~5–8 seconds  
 - Real-time OLED updates  
 
 ---
 
-##  Libraries Used
+## 🧰 Libraries Used
 
 - MFRC522 RFID Library  
 - Adafruit SSD1306 Library  
@@ -122,6 +121,52 @@ The system is designed using a **Finite State Machine (FSM)**:
 
 ---
 
+## 📁 Project Structure
+RFID-Voting-Machine/
+│
+├── main.ino
+├── README.md
+├── image/
+│ ├── WhatsApp Image 2026-05-21 at 4.49.31 AM.jpeg
+│ ├── WhatsApp Image 2026-05-21 at 4.49.32 AM.jpeg
+│ ├── WhatsApp Image 2026-05-21 at 5.14.20 AM.jpeg
 
 
+---
 
+## 💡 Future Improvements
+
+- EEPROM-based vote storage  
+- Cloud dashboard (Google Sheets / ESP8266)  
+- Admin authentication panel  
+- Encrypted RFID system  
+- Mobile app integration  
+
+---
+
+## 📚 References
+
+- Nielsen, J. (1994) – Usability Heuristics  
+- Norman, D. A. – *The Design of Everyday Things*  
+- Arduino Documentation: https://www.arduino.cc/reference/en/  
+- MFRC522 Library: https://github.com/miguelbalboa/rfid  
+- Adafruit SSD1306: https://github.com/adafruit/Adafruit_SSD1306  
+
+---
+
+## 🙏 Acknowledgement
+
+We sincerely thank **Dr. Muhammad Firoz Mridha** for guidance and support.  
+Special thanks to **AIUB** and the open-source Arduino community.
+
+---
+
+## ⚠️ Disclaimer
+
+This project is developed for **educational purposes only** and is not intended for real-world election systems.
+
+---
+
+## ⭐ If you like this project
+
+Give this repository a ⭐ on GitHub!
