@@ -10,7 +10,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 <style>
-/* ─── Reset & Base ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -42,7 +41,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ─── Noise + grid background ──────────────────────────────── */
 body::before {
   content: '';
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -57,7 +55,6 @@ body::after {
   background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(240,192,64,0.07) 0%, transparent 70%);
 }
 
-/* ─── Layout ────────────────────────────────────────────────── */
 .page {
   position: relative; z-index: 1;
   max-width: 1080px;
@@ -65,7 +62,7 @@ body::after {
   padding: 40px 24px 80px;
 }
 
-/* ─── Header ────────────────────────────────────────────────── */
+
 header {
   display: flex;
   align-items: flex-end;
@@ -169,7 +166,6 @@ h1 span { color: var(--gold); }
 }
 .toggle input:checked ~ .toggle-thumb { transform: translateX(16px); }
 
-/* ─── Stat strip ────────────────────────────────────────────── */
 .stat-strip {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -221,7 +217,6 @@ h1 span { color: var(--gold); }
   color: var(--text-muted);
 }
 
-/* ─── Main grid ─────────────────────────────────────────────── */
 .main-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -229,7 +224,6 @@ h1 span { color: var(--gold); }
   align-items: start;
 }
 
-/* ─── Panel / card base ─────────────────────────────────────── */
 .panel {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -253,7 +247,6 @@ h1 span { color: var(--gold); }
 }
 .panel-body { padding: 24px; }
 
-/* ─── Bar chart (custom) ────────────────────────────────────── */
 .bar-list { display: flex; flex-direction: column; gap: 20px; }
 
 .bar-item {}
@@ -298,7 +291,6 @@ h1 span { color: var(--gold); }
 }
 .bar-pct strong { color: var(--text); }
 
-/* ─── Pie chart panel ───────────────────────────────────────── */
 .chart-wrap {
   position: relative;
   max-width: 260px;
@@ -326,7 +318,6 @@ h1 span { color: var(--gold); }
   margin-top: 2px;
 }
 
-/* Legend */
 .legend {
   display: flex;
   flex-direction: column;
@@ -374,7 +365,6 @@ h1 span { color: var(--gold); }
   margin-top: 2px;
 }
 
-/* ─── Last updated footer ───────────────────────────────────── */
 .footer-bar {
   display: flex;
   align-items: center;
@@ -417,7 +407,6 @@ h1 span { color: var(--gold); }
 .btn-refresh svg { transition: transform 0.4s; }
 .btn-refresh:hover svg { transform: rotate(180deg); }
 
-/* ─── Error / loading states ────────────────────────────────── */
 .overlay {
   position: fixed; inset: 0; z-index: 100;
   display: flex;
@@ -460,7 +449,6 @@ h1 span { color: var(--gold); }
 }
 .error-box.visible { display: block; }
 
-/* ─── Animations ────────────────────────────────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(18px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -471,7 +459,6 @@ h1 span { color: var(--gold); }
 .panel:nth-child(1) { animation-delay: 0.26s; }
 .panel:nth-child(2) { animation-delay: 0.33s; }
 
-/* ─── Responsive ────────────────────────────────────────────── */
 @media (max-width: 720px) {
   .main-grid { grid-template-columns: 1fr; }
   .stat-strip { grid-template-columns: 1fr 1fr; }
@@ -487,7 +474,6 @@ h1 span { color: var(--gold); }
 
 <body>
 
-<!-- ── Loading overlay ───────────────────────────────────────── -->
 <div class="overlay" id="overlay">
   <div class="spinner"></div>
   <div class="overlay-msg">Fetching results…</div>
@@ -602,30 +588,22 @@ h1 span { color: var(--gold); }
 </div><!-- /page -->
 
 <script>
-// ═══════════════════════════════════════════════════════════════
-//  ★ CONFIGURATION — paste your deployed Apps Script URL here
-// ═══════════════════════════════════════════════════════════════
+
 const SCRIPT_URL = 'YOUR_GOOGLE-SCRIPT-URL';   // ← change
 
 // Auto-refresh interval in milliseconds (15 seconds)
 const REFRESH_INTERVAL_MS = 15000;
 
-// ═══════════════════════════════════════════════════════════════
-//  Chart colours — must match CSS vars conceptually
-// ═══════════════════════════════════════════════════════════════
+
 const COLORS = ['#f0c040', '#38d9f5', '#3dffa0'];
 const COLORS_DIM = ['rgba(240,192,64,0.15)', 'rgba(56,217,245,0.15)', 'rgba(61,255,160,0.15)'];
 
-// ═══════════════════════════════════════════════════════════════
-//  State
-// ═══════════════════════════════════════════════════════════════
+
 let pieChart       = null;
 let autoInterval   = null;
 let lastResults    = null;
 
-// ═══════════════════════════════════════════════════════════════
-//  DOM refs
-// ═══════════════════════════════════════════════════════════════
+
 const overlay      = document.getElementById('overlay');
 const errorBox     = document.getElementById('errorBox');
 const statTotal    = document.getElementById('statTotal');
@@ -641,9 +619,7 @@ const lastUpdated  = document.getElementById('lastUpdated');
 const btnRefresh   = document.getElementById('btnRefresh');
 const autoToggle   = document.getElementById('autoToggle');
 
-// ═══════════════════════════════════════════════════════════════
-//  Fetch results from Apps Script
-// ═══════════════════════════════════════════════════════════════
+
 async function fetchResults() {
   try {
     const res  = await fetch(`${SCRIPT_URL}?action=results`, { cache: 'no-store' });
@@ -655,13 +631,10 @@ async function fetchResults() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Render dashboard with results data
-// ═══════════════════════════════════════════════════════════════
 function render(data) {
   const { total, results, last_updated } = data;
 
-  // ── Stat cards ──────────────────────────────────────────────
+  // ── Stat cards 
   statTotal.textContent = total;
   statCands.textContent = results.length;
   centerTotal.textContent = total;
@@ -679,7 +652,7 @@ function render(data) {
     leaderBanner.classList.remove('visible');
   }
 
-  // ── Bar list ────────────────────────────────────────────────
+  // ── Bar list 
   barList.innerHTML = '';
   results.forEach((r, i) => {
     const pct = total > 0 ? r.percent : 0;
@@ -706,7 +679,7 @@ function render(data) {
     });
   });
 
-  // ── Pie chart ────────────────────────────────────────────────
+  // ── Pie chart 
   const labels  = results.map(r => r.candidate);
   const values  = results.map(r => r.votes);
   const allZero = values.every(v => v === 0);
@@ -722,7 +695,7 @@ function render(data) {
     buildPieChart(labels, allZero ? [1,1,1] : values, allZero);
   }
 
-  // ── Legend ───────────────────────────────────────────────────
+  // ── Legend 
   legend.innerHTML = '';
   results.forEach((r, i) => {
     legend.innerHTML += `
@@ -734,9 +707,7 @@ function render(data) {
   });
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Build pie chart (called once)
-// ═══════════════════════════════════════════════════════════════
+
 function buildPieChart(labels, values, empty) {
   const ctx = document.getElementById('pieChart').getContext('2d');
   pieChart = new Chart(ctx, {
@@ -777,9 +748,7 @@ function buildPieChart(labels, values, empty) {
   });
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Load (fetch + render + hide overlay)
-// ═══════════════════════════════════════════════════════════════
+
 async function load(showOverlay = false) {
   if (showOverlay) overlay.classList.remove('hidden');
   hideError();
@@ -794,9 +763,6 @@ async function load(showOverlay = false) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Auto-refresh
-// ═══════════════════════════════════════════════════════════════
 function startAutoRefresh() {
   stopAutoRefresh();
   autoInterval = setInterval(() => load(false), REFRESH_INTERVAL_MS);
@@ -806,9 +772,7 @@ function stopAutoRefresh() {
   autoInterval = null;
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Error UI
-// ═══════════════════════════════════════════════════════════════
+
 function showError(msg) {
   errorBox.textContent = '⚠ ' + msg;
   errorBox.classList.add('visible');
@@ -817,16 +781,12 @@ function hideError() {
   errorBox.classList.remove('visible');
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Utility
-// ═══════════════════════════════════════════════════════════════
+
 function escHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Event listeners
-// ═══════════════════════════════════════════════════════════════
+
 btnRefresh.addEventListener('click', () => load(false));
 
 autoToggle.addEventListener('change', () => {
@@ -834,9 +794,7 @@ autoToggle.addEventListener('change', () => {
   else stopAutoRefresh();
 });
 
-// ═══════════════════════════════════════════════════════════════
-//  Boot
-// ═══════════════════════════════════════════════════════════════
+
 load(true);
 startAutoRefresh();
 </script>
