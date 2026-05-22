@@ -77,22 +77,14 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecure.h>
 
-// ═══════════════════════════════════════════════════════════════
-//  ★ EDIT ZONE 1 — WiFi Credentials
-// ═══════════════════════════════════════════════════════════════
+
 const char* WIFI_SSID     = "YOUR-WIFI-NAME/SSID";       // ← change
 const char* WIFI_PASSWORD = "YOUR-WIFI-PASSWORD";   // ← change
 
-// ═══════════════════════════════════════════════════════════════
-//  ★ EDIT ZONE 2 — Google Apps Script Web App URL
-//  After deploying your script: Extensions → Apps Script →
-//  Deploy → New Deployment → Web App → copy the URL here.
-// ═══════════════════════════════════════════════════════════════
+
 const char* SCRIPT_URL = "YOUR-GOOGLE-SCRIPT-URL";   // ← change
 
-// ═══════════════════════════════════════════════════════════════
-//  ★ EDIT ZONE 3 — Candidate Names (must match Apps Script)
-// ═══════════════════════════════════════════════════════════════
+
 #define NUM_CANDIDATES 3
 const char* CANDIDATES[NUM_CANDIDATES] = {
   "Araf",    // ← change
@@ -100,16 +92,14 @@ const char* CANDIDATES[NUM_CANDIDATES] = {
   "Raj"      // ← change
 };
 
-// ═══════════════════════════════════════════════════════════════
-//  Pin Definitions — NodeMCU ESP8266
-// ═══════════════════════════════════════════════════════════════
+
 #define RST_PIN     D0   // GPIO16 — RC522 RST
 #define SS_PIN      D8   // GPIO15 — RC522 SDA/SS
 #define BUZZER_PIN  D3   // GPIO0  — Buzzer
 #define LED_PIN     D4   // GPIO2  — LED (also onboard LED, active LOW)
 #define BTN_PIN     D9   // GPIO3/RX — Push Button (GND when pressed)
 
-// ── OLED ─────────────────────────────────────────────────────
+// ── OLED 
 #define SCREEN_WIDTH  128
 #define SCREEN_HEIGHT 64
 // I2C: SDA=D2(GPIO4), SCL=D1(GPIO5) — ESP8266 default I2C pins
@@ -118,9 +108,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 // ── RFID ─────────────────────────────────────────────────────
 MFRC522 rfid(SS_PIN, RST_PIN);
 
-// ═══════════════════════════════════════════════════════════════
-//  Voting State
-// ═══════════════════════════════════════════════════════════════
+
 int votes[NUM_CANDIDATES] = {0, 0, 0};
 
 // Voter Registry — stores UIDs of cards that already voted
@@ -158,7 +146,7 @@ unsigned long stateEnteredAt = 0;
 #define CONFIRM_DISPLAY_MS  2000
 #define REJECTED_DISPLAY_MS 1800
 
-// ── Forward declarations ──────────────────────────────────────
+// ── Forward declarations 
 void enterIdle();
 void enterSelect();
 void enterRejected();
@@ -179,9 +167,7 @@ void flashLED(int times);
 bool sendVoteToSheet(const char* candidate);
 bool sendResetToSheet();
 
-// ═══════════════════════════════════════════════════════════════
-//  SETUP
-// ═══════════════════════════════════════════════════════════════
+
 void setup() {
   Serial.begin(9600);
 
@@ -215,9 +201,7 @@ void setup() {
   enterIdle();
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  WIFI CONNECTION
-// ═══════════════════════════════════════════════════════════════
+
 void connectWiFi() {
   display.clearDisplay();
   display.setTextColor(SSD1306_WHITE);
@@ -253,9 +237,7 @@ void connectWiFi() {
   delay(1200);
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  MAIN LOOP
-// ═══════════════════════════════════════════════════════════════
+
 void loop() {
   handleButton();
   handleStateTimeout();
@@ -279,9 +261,7 @@ void loop() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  BUTTON HANDLER
-// ═══════════════════════════════════════════════════════════════
+
 void handleButton() {
   bool btnNow = (digitalRead(BTN_PIN) == LOW);
   unsigned long now = millis();
@@ -329,9 +309,7 @@ void handleButton() {
   btnPrevState = btnNow;
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  STATE TIMEOUTS
-// ═══════════════════════════════════════════════════════════════
+
 void handleStateTimeout() {
   unsigned long now = millis();
 
@@ -351,9 +329,7 @@ void handleStateTimeout() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  STATE TRANSITIONS
-// ═══════════════════════════════════════════════════════════════
+
 void enterIdle() {
   currentState = STATE_IDLE;
   drawTallyScreen();
@@ -377,9 +353,7 @@ void enterRejected() {
 
   Serial.println(F("Vote rejected: card already voted."));
 }
-// ─────────────────────────────────────────────────────────────
-//  castVote — records locally + sends to Google Sheets
-// ─────────────────────────────────────────────────────────────
+
 void castVote() {
   // ── 1. Update local tally ───────────────────────────────────
   votes[selectedCandidate]++;
@@ -406,9 +380,7 @@ void castVote() {
   Serial.println(ok ? F(" — Sheet OK") : F(" — Sheet FAILED (vote still counted locally)"));
 }
 
-// ─────────────────────────────────────────────────────────────
-//  adminReset — clears local tally + logs reset to Sheet
-// ─────────────────────────────────────────────────────────────
+
 void adminReset() {
   for (int i = 0; i < NUM_CANDIDATES; i++) votes[i] = 0;
   memset(voterUIDs, 0, sizeof(voterUIDs));
@@ -513,9 +485,7 @@ bool sendResetToSheet() {
   return (code == 200 && body.indexOf("\"ok\"") >= 0);
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  VOTER REGISTRY
-// ═══════════════════════════════════════════════════════════════
+
 bool hasVoted(byte* uid) {
   for (int i = 0; i < voterCount; i++) {
     if (memcmp(voterUIDs[i], uid, 4) == 0) return true;
@@ -530,9 +500,7 @@ void registerVoter(byte* uid) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  DISPLAY SCREENS
-// ═══════════════════════════════════════════════════════════════
+
 
 void showSplash() {
   display.clearDisplay();
@@ -701,9 +669,7 @@ void drawRejectedScreen() {
   display.display();
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  BUZZER PATTERNS
-// ═══════════════════════════════════════════════════════════════
+
 void buzzCardScanned() {
   tone(BUZZER_PIN, 900, 80);  delay(80);  noTone(BUZZER_PIN);
 }
@@ -731,11 +697,6 @@ void buzzReset() {
   noTone(BUZZER_PIN);
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  LED FLASH
-//  Note: D4/GPIO2 is active LOW on NodeMCU.
-//  HIGH = LED off, LOW = LED on.
-// ═══════════════════════════════════════════════════════════════
 void flashLED(int times) {
   for (int i = 0; i < times; i++) {
     digitalWrite(LED_PIN, LOW);  delay(80);
