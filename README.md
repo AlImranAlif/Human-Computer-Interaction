@@ -35,18 +35,18 @@ This system allows users to vote using RFID cards with a simple interactive inte
 
 ## 🖼️ System Interface
 
-### 🔹 Main Dashboard (OLED Interface)
-![Main Dashboard](image/WhatsApp Image 2026-05-21 at 4.49.31 AM.jpeg)
+### 🔹 Main Dashboard 
+![Main Dashboard](image/Dashboard.jpeg)
 
 ---
 
-### 🔹 Google Sheet Add & Main Screen Dashboard (Candidate Selection)
-![Google Sheet & Main Screen](image/WhatsApp Image 2026-05-21 at 4.49.32 AM.jpeg)
+### 🔹 Google Sheet Add & Main Screen Dashboard 
+![Google Sheet & Main Screen](image/dashboar_and_googlesheet.jpeg)
 
 ---
 
 ### 🔹 Hardware Wiring
-![Hardware Wiring](image/WhatsApp Image 2026-05-21 at 5.14.20 AM.jpeg)
+![Hardware Wiring](image/hardware.jpeg)
 
 ---
 
